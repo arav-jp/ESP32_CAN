@@ -27,7 +27,7 @@
 */
 
 
-#include <ESP32_CAN.h>
+#include "ESP32_CAN.h"
 
 #include "esp_system.h"
 #if defined(ESP_IDF_VERSION_MAJOR) && ESP_IDF_VERSION_MAJOR > 3
@@ -40,6 +40,9 @@
 #include "driver/gpio.h"
 
 TaskHandle_t CANBUS_TASK = NULL;
+
+#define ESP32_CAN_TASK_SUSPEND  if ( eTaskGetState(CANBUS_TASK) == eSuspended ) was_suspended = 1;  vTaskSuspend(CANBUS_TASK);
+#define ESP32_CAN_TASK_RESTORE  if ( !was_suspended ) vTaskResume(CANBUS_TASK);  was_suspended = 0;
 
 static void _CAN_TASK(void * parameter) {
   while(1) {

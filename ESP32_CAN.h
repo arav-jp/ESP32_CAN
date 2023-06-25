@@ -55,15 +55,6 @@
 #define REG_RMC                    0x1D
 #define REG_CDR                    0x1F
 
-#define ESP32_CAN_TASK_SUSPEND \
-  if ( eTaskGetState(CANBUS_TASK) == eSuspended ) was_suspended = 1; \
-  vTaskSuspend(CANBUS_TASK);
-
-
-#define ESP32_CAN_TASK_RESTORE \
-  if ( !was_suspended ) vTaskResume(CANBUS_TASK); \
-  was_suspended = 0;
-
 
 typedef struct CAN_message_t {
   uint32_t id = 0;          // can identifier
@@ -187,6 +178,5 @@ ESP32_CAN_CLASS class ESP32_CAN : public ESP32_CAN_Base {
     volatile bool was_suspended = 0;
 };
 
-#include "ESP32_CAN.tpp"
 #endif
 #endif
