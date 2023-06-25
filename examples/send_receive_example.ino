@@ -1,3 +1,4 @@
+
 #include <ESP32_CAN.hpp>
 ESP32_CAN<RX_SIZE_256, TX_SIZE_16> Can0;
 
@@ -14,17 +15,17 @@ void onReceive(const CAN_message_t &msg) {
 
 void setup() {
   Serial.begin(115200);
-  Can0.onReceive(onReceive) ;
-  Can0.setRX(26);
-  Can0.setTX(25);
+  Can0.onReceive(onReceive);
+  Can0.setRX(GPIO_NUM_5);
+  Can0.setTX(GPIO_NUM_15);
   Can0.begin();
-  Can0.setBaudRate(95000);
+  Can0.setBaudRate(1000E3);
 }
 
 
 void loop() {
   static uint32_t t = millis();
-  if ( millis() - t > 1000 ) {
+  if ( millis() - t > 10 ) {
     CAN_message_t msg;
     msg.id = 0x111;
     msg.len = 8;
@@ -35,7 +36,7 @@ void loop() {
     msg.buf[4] = 5;
     msg.buf[5] = 6;
     msg.buf[6] = 7;
-    msg.buf[7] = 8;
+    msg.buf[7] = millis();
     Can0.write(msg);
     t = millis();
   }
